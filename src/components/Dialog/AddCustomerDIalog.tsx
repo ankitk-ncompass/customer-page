@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
     Dialog,
     DialogActions,
@@ -12,16 +13,13 @@ import {
     InputLabel,
     SelectChangeEvent,
 } from '@mui/material';
+
 import customerData from '../../utils/customerData';
 import { defaultCustomer, generateUnique4DigitId, getSalesRepCounts } from '../../utils/countingFunctions';
-import { Customer } from '../../utils/types';
+import { AddCustomerDialogProps } from "../../utils/types"
 
+import "./Dialog.css"
 
-interface AddCustomerDialogProps {
-    open: boolean;
-    onClose: () => void;
-    onSave: (customer: Customer) => void
-}
 const AddCustomerDialog: React.FC<AddCustomerDialogProps> = ({ open, onClose, onSave }) => {
 
     const [formValues, setFormValues] = useState({
@@ -55,9 +53,11 @@ const AddCustomerDialog: React.FC<AddCustomerDialogProps> = ({ open, onClose, on
             <DialogTitle>Add Customer</DialogTitle>
             <DialogContent>
                 <TextField
+                    className='text-field'
                     margin="dense"
                     name="buyerName"
                     label="Customer Name"
+                    required
                     fullWidth
                     value={formValues.buyerName}
                     onChange={handleChange}
@@ -70,11 +70,13 @@ const AddCustomerDialog: React.FC<AddCustomerDialogProps> = ({ open, onClose, on
                         fullWidth
                         name='salesRepName'
                         label='Sales Rep'
+                        required
                     >
                         {salesRepList.map(salesRep => <MenuItem key={salesRep.value} value={salesRep.value}>{salesRep.label}</MenuItem>)}
                     </Select>
                 </FormControl>
                 <TextField
+                    className='text-field'
                     margin="dense"
                     name="state"
                     label="State"
@@ -83,6 +85,7 @@ const AddCustomerDialog: React.FC<AddCustomerDialogProps> = ({ open, onClose, on
                     onChange={handleChange}
                 />
                 <TextField
+                    className='text-field'
                     margin="dense"
                     name="country"
                     label="Country"
@@ -91,6 +94,7 @@ const AddCustomerDialog: React.FC<AddCustomerDialogProps> = ({ open, onClose, on
                     onChange={handleChange}
                 />
                 <TextField
+                    className='text-field'
                     margin="dense"
                     name="phone"
                     label="Phone"
@@ -99,6 +103,7 @@ const AddCustomerDialog: React.FC<AddCustomerDialogProps> = ({ open, onClose, on
                     onChange={handleChange}
                 />
                 <TextField
+                    className='text-field'
                     margin="dense"
                     name="email"
                     label="Email"
@@ -107,6 +112,7 @@ const AddCustomerDialog: React.FC<AddCustomerDialogProps> = ({ open, onClose, on
                     onChange={handleChange}
                 />
                 <TextField
+                    className='text-field'
                     margin="dense"
                     name="whatsApp"
                     label="WhatsApp"

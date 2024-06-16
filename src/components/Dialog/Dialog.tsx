@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -9,75 +9,111 @@ import {
   FormGroup,
   FormControlLabel,
   Checkbox,
+  RadioGroup,
+  Radio,
 } from '@mui/material';
 
-interface FilterTypes{
-    label: string;
-    value: string;
-    count?: number;
-}
+import { DialogProps } from '../../utils/types';
 
-interface DialogProps {
-  filterTypes: FilterTypes[];
-  title: string;
-  label: string;
-  open: boolean;
-  onClose: () => void;
-  onApply: (selectedTypesArray: string[], title: string) => void;
-}
 
-const FilterDialog: React.FC<DialogProps> = ({filterTypes, title, label, open, onClose, onApply }) => {
+const FilterDialog: React.FC<DialogProps> = ({ allClear, filterTypes, title, label, open, onClose, onApply, handleButtonType }) => {
   const [selectedTypes, setSelectedTypes] = useState<Record<string, boolean>>({});
   const [selectedTypesArray, setSelectedTypesArray] = useState<string[]>([]);
+  const [selectedRadio, setSelectedRadio] = useState<string>('');
 
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = event.target;
- 
+
     setSelectedTypes((prev) => ({ ...prev, [name]: checked }));
     setSelectedTypesArray((prev) => {
-      if(checked){
-      if(!prev.includes(name)){
-        return [...prev, name]
+      if (checked) {
+        if (!prev.includes(name)) {
+          return [...prev, name]
+        }
+        return prev
       }
-      return prev
-    }
-    else{
-      return prev.filter(item => item !== name);
-    }
+      else {
+        return prev.filter(item => item !== name);
+      }
     })
   };
 
   const handleApply = () => {
     onApply(selectedTypesArray, title);
+    handleButtonType(selectedTypesArray)
     onClose();
   };
 
+  const handleClear = () => {
+    setSelectedTypes({});
+    setSelectedTypesArray([]);
+    setSelectedRadio('')
+    handleButtonType([])
+    onApply([], title)
+    handleButtonType([])
+    onClose()
+  }
+
+  useEffect(() => {
+    handleClear()
+  }, [allClear])
+
+  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setSelectedRadio(value);
+    setSelectedTypesArray([value]);
+  };
+
+  const isButtonDisabled = () => {
+    if (label === 'Checkout Status')
+      return selectedRadio.length === 0;
+    else
+      return selectedTypesArray.length === 0;
+  }
+
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onClose={onClose}>
       <DialogTitle>{label}</DialogTitle>
       <DialogContent>
         <FormControl component="fieldset">
-          <FormGroup>
-            {filterTypes.map((type) => (
-              <FormControlLabel
-                key={type.value}
-                control={
-                  <Checkbox
-                    checked={!!selectedTypes[type.value]}
-                    onChange={handleCheckboxChange}
-                    name={type.value}
-                  />
-                }
-                label={`${type.label}${type.count? `(${type.count})` : ''}`} 
-              />
-            ))}
-          </FormGroup>
+          {label === 'Checkout Status' ? (
+            <RadioGroup value={selectedRadio} onChange={handleRadioChange}>
+              {filterTypes.map((type) => (
+                <FormControlLabel
+                  key={type.value}
+                  control={<Radio />}
+                  value={type.value}
+                  label={`${type.label}${type.count ? `(${type.count})` : ''}`}
+                />
+              ))}
+            </RadioGroup>
+          ) : (
+            <FormGroup>
+              {filterTypes.map((type) => (
+                <FormControlLabel
+                  key={type.value}
+                  control={
+                    <Checkbox
+                      checked={!!selectedTypes[type.value]}
+                      onChange={handleCheckboxChange}
+                      name={type.value}
+                    />
+                  }
+                  label={`${type.label}${type.count ? `(${type.count})` : ''}`}
+                />
+              ))}
+            </FormGroup>)}
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Clear</Button>
-        <Button onClick={handleApply} variant="contained">Apply</Button>
+        <Button onClick={handleClear}>Clear</Button>
+        <Button
+          disabled={isButtonDisabled()}
+          onClick={handleApply}
+          variant="contained">
+          Apply
+        </Button>
       </DialogActions>
     </Dialog>
   );

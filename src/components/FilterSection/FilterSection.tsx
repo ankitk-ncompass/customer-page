@@ -1,51 +1,31 @@
+import { Button } from '@mui/material';
 
-import {getSalesRepCounts, getTagCounts} from '../../utils/countingFunctions';
-import customerData from '../../utils/customerData';
+import { getBuyerTypeCounts, getDocumentStatusCounts, getRegistrationStatusCounts, getSalesRepCounts, getTagCounts } from '../../utils/countingFunctions';
+import DateFilter from '../FilterTypes/DateFilter';
 import FilterType from '../FilterTypes/FilterType';
+import { FilterSectionProps } from '../../utils/types';
 
 import "./FilterSection.css"
 
 
-interface FilterSectionProps{
-  handleApply: (selectedTypesArray: string[],title: string) => void;
-}
+const FilterSection: React.FC<FilterSectionProps> = ({ copiedCustomerData, allClear, clearFilterParameters, createdDateFilter, handleApply, handleCreatedDateFilter, updatedDateFilter, handleUpdatedDateFilter }) => {
 
-const salesRep = getSalesRepCounts(customerData)
-
-const tagsTypes = getTagCounts(customerData)
-
-const documentStatus = [
-  { label: 'Blank', value: 'null' },
-  { label: 'Missing Docs', value: 'MISSING' },
-  { label: 'Docs to Review', value: 'TO_REVIEW' },
-  { label: 'Docs Verified', value: 'VERIFIED' },
-];
-
-const checkoutStatus = [
-  { label: 'Ready', value: 'Complete' },
-  { label: 'Checkout OFf', value: 'Incomplete' },
-];
-
-const customerTypes = [
-  { label: 'Select All', value: 'selectAll' },
-  { label: 'Blanks', value: 'blanks' },
-  { label: 'CUSTOMER', value: 'GENERIC_CUSTOMER' },
-  { label: 'Customer', value: 'customer' },
-  { label: 'EXPIRED_VERIFIED_PROSPECT', value: 'EXPIRED_VERIFIED_PROSPECT' },
-  { label: 'Prospect', value: 'Prospect' },
-  { label: 'REJECTED', value: 'REJECTED' },
-  { label: 'Verified Prospect', value: 'VerifiedProspect' },
-];
-
-const FilterSection:React.FC<FilterSectionProps> = ({ handleApply}) => {
-
+  const salesRep = getSalesRepCounts(copiedCustomerData)
+  const tagsTypes = getTagCounts(copiedCustomerData)
+  const documentStatus = getDocumentStatusCounts(copiedCustomerData)
+  const checkoutStatus = getRegistrationStatusCounts(copiedCustomerData)
+  const customerTypes = getBuyerTypeCounts(copiedCustomerData)
+  
   return (
     <div className='filter-section'>
-      <FilterType  label='Customer Types' title='buyerTypes' handleApply={handleApply} filterTypes = {customerTypes}/>
-      <FilterType  label='Checkout Status' title='checkOutStatuses' handleApply={handleApply} filterTypes = {checkoutStatus}/>
-      <FilterType  label='Document Status' title='documentStatuses' handleApply={handleApply} filterTypes = {documentStatus}/>
-      <FilterType  label='SALES REP' title='salesReps' handleApply={handleApply} filterTypes = {salesRep}/>
-      <FilterType  label='TAGS' title='tags' handleApply={handleApply} filterTypes = {tagsTypes}/>
+      <FilterType allClear={allClear} label='Customer Types' title='buyerTypes' handleApply={handleApply} filterTypes={customerTypes} />
+      <FilterType allClear={allClear} label='Checkout Status' title='checkOutStatuses' handleApply={handleApply} filterTypes={checkoutStatus} />
+      <FilterType allClear={allClear} label='Document Status' title='documentStatuses' handleApply={handleApply} filterTypes={documentStatus} />
+      <FilterType allClear={allClear} label='SALES REP' title='salesReps' handleApply={handleApply} filterTypes={salesRep} />
+      <FilterType allClear={allClear} label='TAGS' title='tags' handleApply={handleApply} filterTypes={tagsTypes} />
+      <DateFilter allClear={allClear} label='CREATED' createdDateFilter={createdDateFilter} handleCreatedDateFilter={handleCreatedDateFilter} />
+      <DateFilter allClear={allClear} label='UPDATED' createdDateFilter={updatedDateFilter} handleCreatedDateFilter={handleUpdatedDateFilter} />
+      <Button className='clear-btn' variant='text' onClick={clearFilterParameters}>Clear</Button>
     </div>
   )
 }

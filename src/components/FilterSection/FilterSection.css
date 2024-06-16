@@ -1,5 +1,9 @@
 .filter-section{
-    display: flex;
-    flex-direction: row;
-    margin: 10px 0;
+ display: flex;
+ flex-wrap: wrap;
+ margin-bottom: 20px;
+}
+
+.clear-btn.MuiButtonBase-root.MuiButton-root{
+    color: #124191;
 }

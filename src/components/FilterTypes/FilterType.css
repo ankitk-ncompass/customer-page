@@ -1,0 +1,30 @@
+.editIcon.MuiSvgIcon-root{
+    margin-left: 15px;
+    height: 1rem;
+    width: 1rem;
+}
+
+.btn.MuiButtonBase-root.MuiButton-root{
+    border-radius: 20px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    max-width: 300px;
+    max-height: 30px;
+}
+
+.customized-label{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.filter-btn.MuiButtonBase-root.MuiButton-root{
+    color: #124191 ;
+    border-color: #124191;
+    background-color: #fff;
+}
+
+.filter-btn-contained.MuiButtonBase-root.MuiButton-root{
+    color: #fff;
+    background-color: #124191;
+}
